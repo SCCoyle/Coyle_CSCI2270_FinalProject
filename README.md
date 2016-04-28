@@ -10,9 +10,8 @@
 
 #How to Run
  + Open the FinalProject folder 
- + run `make`
- + Open Debug
- + run `./Final.cpp`
+ + run `g++ Final.cpp market.h market.cpp`
+ + run `./a.out`
 
 #Dependencies
   + No external libraries were used for this project
