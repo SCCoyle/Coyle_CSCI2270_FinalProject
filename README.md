@@ -9,8 +9,10 @@
    + Uses two external files (settings.txt and Products.txt) toquickly change settings and add products
 
 #How to Run
- + This project is run the same way as any other project  
- + Pull the file and run the Final.cpp file with NO commnd line arguments
+ + Open the FinalProject folder 
+ + run `make`
+ + Open Debug
+ + run `./Final.cpp`
 
 #Dependencies
   + No external libraries were used for this project
