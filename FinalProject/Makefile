@@ -1,8 +1,8 @@
 .PHONY: clean All
 
 All:
-	@echo "----------Building project:[ Montella - Debug ]----------"
-	@"$(MAKE)" -f  "Montella.mk"
+	@echo "----------Building project:[ FinalProject - Debug ]----------"
+	@"$(MAKE)" -f  "FinalProject.mk"
 clean:
-	@echo "----------Cleaning project:[ Montella - Debug ]----------"
-	@"$(MAKE)" -f  "Montella.mk" clean
+	@echo "----------Cleaning project:[ FinalProject - Debug ]----------"
+	@"$(MAKE)" -f  "FinalProject.mk" clean

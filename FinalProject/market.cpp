@@ -212,6 +212,7 @@ product * market::findProduct(std::string name)
 	//finding the product
 	product * temp = root;
 	int found = 0;
+	//basic tree search
 	while(!found)
 	{
 		if(temp->name == name)
@@ -253,6 +254,7 @@ product * market::findProduct(std::string name)
 
 void market::timeStats()
 {
+	//printing out some user info 
 	std::cout << "Current time: " << time(&settingsStorage.startTime) <<std::endl;  
 	std::cout << "Last time check was  " << time(&settingsStorage.startTime) - lastTimeCheck << " seconds ago" <<std::endl;
 	lastTimeCheck = time(&settingsStorage.startTime);
@@ -260,20 +262,20 @@ void market::timeStats()
 
 void market::addNewUser(std::string name, std::string password, double wallet)
 {
+	//makes a new node in the user list unused
 	userInfo *newUser = new userInfo(name,password,wallet);
 	if(!currentUser)
 	{
 		currentUser = newUser;
 	}
-//	std::cout << "test0" << std::endl;
 	users.push_back(newUser);
 	std::cout << "User Added" << std::endl;
 }
 
 void market::printProfit(product * node)
 {
+	//same basic idea as the tree print 
 	product *temp = node;
-//	std::cout << root->right << std::endl;
 	if(temp->left != NULL)
 	{
 		printProfit(temp->left);
@@ -298,19 +300,22 @@ void market::totalProfit()
 }
 void market::totalProfit(std::vector<purchaseBlockChain*> blockChain)
 {	
+	//runs though the purchase block chain and adds the net profit 
 	int blockChainSize = blockChain.size();
 	for(int blockChainIndex = 0; blockChainIndex < blockChainSize; blockChainIndex++)
 	{
+		//stores profit from each  product in its spot in the tree
 		product *currentProduct = blockChain[blockChainIndex]->purchaseEvent->item;
 		double salePrice = blockChain[blockChainIndex]->purchaseEvent->cost;
-//		std::cout << currentProduct->cost << " " << salePrice << std::endl;
 		currentProduct->profit = salePrice - currentProduct->cost;
 	}
+	//prints profits stored in tree
 	printProfit(root);
 }
 
 void market::addMoney()
 {
+	//increases the money that the users has in their account
 	std::cout << "How much would you like to add " << currentUser->name << "?" << std::endl;
 	double money;
 	std::string moneyS;
