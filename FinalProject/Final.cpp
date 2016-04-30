@@ -44,6 +44,7 @@ void newSettings(market * coinMarket)
 	//parsing the file 
 	
 	//initalizing the variables
+	//____s versions of names is where the getline of the variable is stored before being converted
 	double decay;
 	string decayS;	
 	double decayBase;
@@ -59,7 +60,9 @@ void newSettings(market * coinMarket)
 	
 	//storing the settigns in the string versions of the settings
 	getline(settingsFile,decayS);
-	getline(settingsFile,decayS,':');
+	// the : version of the getline storage gets rid of all of the
+	//     text before the : without changing the value
+	getline(settingsFile,decayS,':');  
 	getline(settingsFile,decayS);
 	getline(settingsFile,decayBaseS,':');
 	getline(settingsFile,decayBaseS);
@@ -88,7 +91,6 @@ void newSettings(market * coinMarket)
 	
 	//Setting the settings values
 	coinMarket->addSettings(decay,decayBase,recency,max,maxP,postMultiplier);
-//	cout << "b" << endl;
 	
 }
 
@@ -145,22 +147,29 @@ void newUser(market *coinMarket)
 {
 	cout << "What is your name?" << endl;
 	string userName;
-	//getline(cin,userName);	cout << "Enter a password" << endl;
+	//password is unused scrapped idea
 	string password = "password";
+	
+	//getting wallet info
 	getline(cin,password);	cout << "How much is in your wallet? " << endl;
 	double wallet;
 	string walletS;
 	getline(cin,walletS);
 	stringstream walletConvert(walletS);
 	walletConvert >> wallet;
+	
+	//runnign the addUser method multiple users scrapped
 	coinMarket->addNewUser(userName,password, wallet);
 }
 int main(int argc, char **argv)
 {
+	//initializing the class
 	market *coinMarket = new market();
 	newSettings(coinMarket);
 	newProducts(coinMarket);
 	newUser(coinMarket);
+	
+	//menu loop
 	bool interfaceKill = 0;
 	while(!interfaceKill)
 	{
@@ -169,16 +178,19 @@ int main(int argc, char **argv)
 		{
 			case 1:
 			{
+				//Printing products
 				coinMarket->printProductsSafe();
 				break;
 			}
 			case 2:
 			{
+				//giving the some past data about the time 
 				coinMarket->timeStats();
 				break;
 			}
 			case 3:
 			{
+				//buying the product
 				cout << "Enter a Coin:" << endl;
 				string coinName;
 				getline(cin,coinName);
@@ -187,16 +199,19 @@ int main(int argc, char **argv)
 			}
 			case 4:
 			{
+				//checking the differences between the purchase price and the cost of each coin
 				coinMarket->totalProfit();
 				break;
 			}
 			case 5:
 			{
+				//adding money to the current user's wallet
 				coinMarket->addMoney();
 				break;
 			}
 			case 6:
 			{
+				//ending the program
 				interfaceKill = 1;
 				break;
 			}

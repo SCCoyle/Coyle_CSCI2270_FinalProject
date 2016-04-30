@@ -14,7 +14,8 @@ market::market()
 market::~market()
 {
 }
-
+//unused method to check of the numbers a user inputs are double but all the user inputs ended up being 
+//	getline() with doubles so there ws no longer a point to the method
 int market::checkNumber(std::string number)
 {
 	int length = number.length();
@@ -53,29 +54,29 @@ int market::checkNumber(std::string number)
 
 void market::addProducts(std::string name,int quantity, double price, double cost)
 {
-//	std::cout << name << " " << quantity << " " << price << " " << cost << std::endl;
+	//allocating memory for a new product
 	product *newProduct = new product(name,quantity,price,cost,time(&(settingsStorage.startTime)));
+	
+	//adding a product to a tree
 	product *temp = root;
 	if(root == NULL)
 	{
-//		std::cout << "z" << std::endl;
 		root = newProduct;
 	}
 	else
 	{
+	//traversing the tree
+		
 		//while loop ender
 		bool kill = 0;
 		while(!kill)
 		{
-//			std::cout << "a" << std::endl;
 			// if the title comes earlier in the alphabet
 			if(newProduct->name < temp->name)
 			{
-//				std::cout << "b" << std::endl;
 				//if there is no childe to the one compared to make the new one hte child
 				if(temp->left == NULL)
 				{
-//					std::cout << "c" << std::endl;
 					//linking the nodes to eachother
 					temp->left = newProduct;
 					newProduct->parent = temp;
@@ -85,49 +86,27 @@ void market::addProducts(std::string name,int quantity, double price, double cos
 				// if there is a child there move down the tree
 				else
 				{
-//					std::cout << "d" << std::endl;
 					temp = temp->left;
 				}
 			}
 			else //same execution as above on if it is greater
 			{
-///				std::cout << "d" << std::endl;
 				if(temp->right == NULL)
 				{
-//					std::cout << "e" << std::endl;
 					temp->right = newProduct;
 					newProduct->parent = temp;
 					kill = 1;
 				}
 				else
 				{
-//					std::cout << "f" << std::endl;
 					temp = temp->right;
 				}
 			}
 		}
 	}
-/*	std::cout  
-		<< "Parent: " << newProduct->parent << " "
-		<< "Address: " << newProduct << " "
-		<< "Left: " << newProduct->left << " "
-		<< "Right: " << newProduct->right
-		<< " " << newProduct->name
-		<< " " << newProduct->cost
-		<< " " << newProduct->price
-		<< std::endl;	
-		std::cout  << "Root: "
-		<< "Parent: " << root->parent << " "
-		<< "Address: " << root << " "
-		<< "Left: " << root->left << " "
-		<< "Right: " << root->right
-		<< " " << root->name
-		<< " " << root->cost
-		<< " " << root->price
-		<< std::endl;
-*/
-}
 
+}
+//stupid method that could probably be avoided but I was using time so this was easy
 void market::addSettings(double decay, double decayBase, bool recency, bool max, double maxP,double postMultiplier)
 {
 	settingsStorage.decayRate = -1 * decay;
@@ -135,34 +114,49 @@ void market::addSettings(double decay, double decayBase, bool recency, bool max,
 	settingsStorage.recencyDetection = recency;
 	settingsStorage.maxPrice = max;
 	settingsStorage.maxPriceMultiplier = maxP;
+	
+	//reason for method
 	time_t startTime;
 	settingsStorage.startTime = time(&startTime);
 	lastTimeCheck = startTime;
+	
 	settingsStorage.postBuyMultiplier = postMultiplier;
-//	std::cout << "Start time: " << startTime << std::endl;
 }
 
 void market::buyProduct(std::string name)
 {
 	product *temp = findProduct(name);
+	
+	//if product found
 	if(temp != NULL)
 	{
+		//if there is more than 0 of the selected product
 		if(temp->quantity != 0)
 		{
-			(temp->quantity)--;
+			//if the user can afford it
 			if(currentUser->wallet > temp->price)
 			{
+				//reduced the nventory by one
+				(temp->quantity)--;
+				
+				//pay for the product
 				currentUser->wallet = currentUser->wallet - temp->price;
+				//for use in storage after the price is changes
 				double salePrice = temp->price;
 				std::cout << "You have " << currentUser->wallet << " dollars left in your wallet." << std::endl;
+				
+				//don't remember exactly why this is here but the idea seems important
 				if(temp->base < temp->price * (pow(settingsStorage.decayRateBase,settingsStorage.decayRate * (time(&settingsStorage.startTime) - temp->lastSold))))
 				{
 					temp->price = temp->price * (pow(settingsStorage.decayRateBase,settingsStorage.decayRate * (time(&settingsStorage.startTime) - temp->lastSold)));
 				}
+				
 				temp->lastSold = time(&settingsStorage.startTime);
+				
+				//stroing the purchase information every where (very memory inefficient)
 				purchase *newPurchase = new purchase(time(&settingsStorage.startTime),currentUser,temp,salePrice);
 				temp->price = temp->price*(settingsStorage.postBuyMultiplier);
-				std::cout << "The new price is: " << temp->price << std::endl;
+				std::cout << "The new price is " << temp->price << " and there are " << temp->quantity << " left" << std::endl ;
 				purchaseBlockChain *newBlock = new purchaseBlockChain(newPurchase);
 				personalPurchase *newPersonalPurchase = new personalPurchase(newPurchase);
 				currentUser->purchases.push_back(newPersonalPurchase);
@@ -199,7 +193,7 @@ void market::printProducts(product *node)
 			temp->price = temp->price * (pow(settingsStorage.decayRateBase,settingsStorage.decayRate * (time(&settingsStorage.startTime) - temp->lastSold)));
 		}
 		temp->lastSold = time(&settingsStorage.startTime);
-		std::cout << "Name: "<< temp->name  << std::endl << "Price: "<< temp->price << std::endl; 
+		std::cout << "Name: "<< temp->name  << std::endl << "  Price: "<< temp->price << std::endl << "  Quantity: " << temp->quantity << std::endl; 
 	}
 	if(temp->right != NULL)
 	{

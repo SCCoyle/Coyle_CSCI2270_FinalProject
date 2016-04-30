@@ -1,14 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CodeLite_Workspace Name="Final" Database="">
-  <Project Name="FinalProject" Path="FinalProject.project" Active="Yes"/>
+  <Project Name="FinalProject" Path="FinalProject.project" Active="No"/>
+  <Project Name="Montella" Path="Montella.project" Active="Yes"/>
   <BuildMatrix>
     <WorkspaceConfiguration Name="Debug" Selected="yes">
       <Environment/>
       <Project Name="FinalProject" ConfigName="Debug"/>
+      <Project Name="Montella" ConfigName="Debug"/>
     </WorkspaceConfiguration>
     <WorkspaceConfiguration Name="Release" Selected="yes">
       <Environment/>
       <Project Name="FinalProject" ConfigName="Release"/>
+      <Project Name="Montella" ConfigName="Release"/>
     </WorkspaceConfiguration>
   </BuildMatrix>
 </CodeLite_Workspace>
