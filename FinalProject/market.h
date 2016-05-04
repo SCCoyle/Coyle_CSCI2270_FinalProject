@@ -11,7 +11,7 @@ struct settings{
 	bool maxPrice;
 	double maxPriceMultiplier;
 	time_t startTime;
-	
+
 };
 
 struct product{
@@ -27,7 +27,7 @@ struct product{
 	std::vector<int> soldChain;
 	product *left = NULL;
 	product *right = NULL;
-	
+
 	product(){};
 
     product(std::string in_name, int in_quantity, double in_price, double in_cost, time_t start_time)
@@ -49,14 +49,14 @@ struct userInfo{
 	std::string password;
 	double wallet;
 	std::vector<personalPurchase*> purchases;
-	
+
 	userInfo(std::string in_name, std::string in_password, double in_wallet)
 	{
 		name = in_name;
 		password = in_password;
 		wallet = in_wallet;
 	}
-	
+
 };
 
 struct purchase{
@@ -64,7 +64,7 @@ struct purchase{
 	userInfo *buyer;
 	product *item;
 	double cost;
-	
+
 	purchase(time_t in_time, userInfo *in_buyer, product *in_item,double in_cost)
 	{
 		time = in_time;
@@ -76,7 +76,7 @@ struct purchase{
 
 struct personalPurchase{
 	purchase *purchaseEvent;
-	
+
 	personalPurchase(purchase *in_purchase)
 	{
 		purchaseEvent = in_purchase;
@@ -85,7 +85,7 @@ struct personalPurchase{
 
 struct purchaseBlockChain{
 	purchase *purchaseEvent;
-	
+
 	purchaseBlockChain(purchase *in_purchase)
 	{
 		purchaseEvent = in_purchase;
@@ -110,8 +110,9 @@ class market
 		void totalProfit();
 		void timeStats();
 		void addMoney();
+		void pastPurchases();
 
-		
+
 	protected:
 	private:
 		settings settingsStorage;
@@ -127,5 +128,6 @@ class market
 		userInfo *currentUser = NULL;
 		void totalProfit(std::vector<purchaseBlockChain*> blockChain);
 		void printProfit(product * node);
+		void pastPurchases(std::vector<purchaseBlockChain*> blockChain);
 };
 

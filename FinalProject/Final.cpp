@@ -17,15 +17,16 @@ int menu()
 	cout << "3. Buy a Product" << endl;
 	cout << "4. Net profit"	<< endl;
 	cout << "5. Add Money to Wallet"	<< endl;
-	cout << "6. Quit" << endl; 
-	
+	cout << "6. Print Past Purchases" << endl;
+	cout << "7. Quit" << endl;
+
 	//converting the users choice
 	int choice;
 	string choiceS;
 	getline(cin,choiceS);
 	stringstream choiceConvert(choiceS);
 	choiceConvert >> choice;
-	
+
 	return choice;
 }
 
@@ -35,18 +36,18 @@ void newSettings(market * coinMarket)
 	string settings = "settings.txt";
 	ifstream settingsFile;
 	settingsFile.open(settings.c_str());
-	
-	//If file opening doesn't work this happens 
+
+	//If file opening doesn't work this happens
 	if(!settingsFile)
 	{
 		cout << "settings opening unsuccessful" << endl;
 	}
-	//parsing the file 
-	
+	//parsing the file
+
 	//initalizing the variables
 	//____s versions of names is where the getline of the variable is stored before being converted
 	double decay;
-	string decayS;	
+	string decayS;
 	double decayBase;
 	string decayBaseS;
 	bool recency;
@@ -57,12 +58,12 @@ void newSettings(market * coinMarket)
 	string maxPS;
 	double postMultiplier;
 	string postMultiplierS;
-	
+
 	//storing the settigns in the string versions of the settings
 	getline(settingsFile,decayS);
 	// the : version of the getline storage gets rid of all of the
 	//     text before the : without changing the value
-	getline(settingsFile,decayS,':');  
+	getline(settingsFile,decayS,':');
 	getline(settingsFile,decayS);
 	getline(settingsFile,decayBaseS,':');
 	getline(settingsFile,decayBaseS);
@@ -74,7 +75,7 @@ void newSettings(market * coinMarket)
 	getline(settingsFile,maxPS);
 	getline(settingsFile,postMultiplierS,':');
 	getline(settingsFile,postMultiplierS);
-	
+
 	//Converting all of the strings to the appropriate type
 	stringstream decayConvert(decayS);
 	decayConvert >> decay;
@@ -88,10 +89,10 @@ void newSettings(market * coinMarket)
 	maxPConvert >> maxP;
 	stringstream postMultiplierConvert(postMultiplierS);
 	postMultiplierConvert >> postMultiplier;
-	
+
 	//Setting the settings values
 	coinMarket->addSettings(decay,decayBase,recency,max,maxP,postMultiplier);
-	
+
 }
 
 void newProducts(market * coinMarket)
@@ -100,8 +101,8 @@ void newProducts(market * coinMarket)
 	string products = "Products.txt";
 	ifstream productsFile;
 	productsFile.open(products.c_str());
-	
-	//If file opening doesn't work this happens 
+
+	//If file opening doesn't work this happens
 	if(!productsFile)
 	{
 		cout << "file opening unsuccessful " << endl;
@@ -118,23 +119,23 @@ void newProducts(market * coinMarket)
 		string priceS;
 		double cost;
 		string costS;
-		
+
 		//parsing the line
 		getline(productsFile,name,',');
 		getline(productsFile,quantityS,' ');
 		getline(productsFile,priceS,' ');
 		getline(productsFile,costS);
-		
+
 		//converting the varibles
 		stringstream quantityConvert(quantityS);
 		quantityConvert >> quantity;
-		
+
 		stringstream priceConvert(priceS);
 		priceConvert >> price;
-		
+
 		stringstream costConvert(costS);
 		costConvert >> cost;
-		
+
 		//giving it to the addProduct method
 		if(name != "")
 		{
@@ -149,15 +150,16 @@ void newUser(market *coinMarket)
 	string userName;
 	//password is unused scrapped idea
 	string password = "password";
-	
+
 	//getting wallet info
-	getline(cin,password);	cout << "How much is in your wallet? " << endl;
+	getline(cin,userName);
+	cout << "How much is in your wallet? " << endl;
 	double wallet;
 	string walletS;
 	getline(cin,walletS);
 	stringstream walletConvert(walletS);
 	walletConvert >> wallet;
-	
+
 	//runnign the addUser method multiple users scrapped
 	coinMarket->addNewUser(userName,password, wallet);
 }
@@ -168,7 +170,6 @@ int main(int argc, char **argv)
 	newSettings(coinMarket);
 	newProducts(coinMarket);
 	newUser(coinMarket);
-	
 	//menu loop
 	bool interfaceKill = 0;
 	while(!interfaceKill)
@@ -184,7 +185,7 @@ int main(int argc, char **argv)
 			}
 			case 2:
 			{
-				//giving the some past data about the time 
+				//giving the some past data about the time
 				coinMarket->timeStats();
 				break;
 			}
@@ -210,15 +211,20 @@ int main(int argc, char **argv)
 				break;
 			}
 			case 6:
+            {
+                coinMarket->pastPurchases();
+                break;
+            }
+			case 7:
 			{
 				//ending the program
 				interfaceKill = 1;
 				break;
 			}
 		}
-		
+
 	}
-	
+
 	return 0;
-	
+
 }
