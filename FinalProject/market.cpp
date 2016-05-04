@@ -14,7 +14,7 @@ market::market()
 market::~market()
 {
 }
-//unused method to check of the numbers a user inputs are double but all the user inputs ended up being 
+//unused method to check of the numbers a user inputs are double but all the user inputs ended up being
 //	getline() with doubles so there ws no longer a point to the method
 int market::checkNumber(std::string number)
 {
@@ -45,7 +45,7 @@ int market::checkNumber(std::string number)
 		std::stringstream convert(number);
 		convert >> nonSNumber;
 	}
-	/*return codes 
+	/*return codes
 	 * -1 not a number
 	 * non negative number the number is actual number
 	*/
@@ -56,7 +56,7 @@ void market::addProducts(std::string name,int quantity, double price, double cos
 {
 	//allocating memory for a new product
 	product *newProduct = new product(name,quantity,price,cost,time(&(settingsStorage.startTime)));
-	
+
 	//adding a product to a tree
 	product *temp = root;
 	if(root == NULL)
@@ -66,7 +66,7 @@ void market::addProducts(std::string name,int quantity, double price, double cos
 	else
 	{
 	//traversing the tree
-		
+
 		//while loop ender
 		bool kill = 0;
 		while(!kill)
@@ -114,19 +114,19 @@ void market::addSettings(double decay, double decayBase, bool recency, bool max,
 	settingsStorage.recencyDetection = recency;
 	settingsStorage.maxPrice = max;
 	settingsStorage.maxPriceMultiplier = maxP;
-	
+
 	//reason for method
 	time_t startTime;
 	settingsStorage.startTime = time(&startTime);
 	lastTimeCheck = startTime;
-	
+
 	settingsStorage.postBuyMultiplier = postMultiplier;
 }
 
 void market::buyProduct(std::string name)
 {
 	product *temp = findProduct(name);
-	
+
 	//if product found
 	if(temp != NULL)
 	{
@@ -136,23 +136,23 @@ void market::buyProduct(std::string name)
 			//if the user can afford it
 			if(currentUser->wallet > temp->price)
 			{
-				//reduced the nventory by one
+				//reduced the inventory by one
 				(temp->quantity)--;
-				
+
 				//pay for the product
 				currentUser->wallet = currentUser->wallet - temp->price;
 				//for use in storage after the price is changes
 				double salePrice = temp->price;
 				std::cout << "You have " << currentUser->wallet << " dollars left in your wallet." << std::endl;
-				
+
 				//don't remember exactly why this is here but the idea seems important
 				if(temp->base < temp->price * (pow(settingsStorage.decayRateBase,settingsStorage.decayRate * (time(&settingsStorage.startTime) - temp->lastSold))))
 				{
 					temp->price = temp->price * (pow(settingsStorage.decayRateBase,settingsStorage.decayRate * (time(&settingsStorage.startTime) - temp->lastSold)));
 				}
-				
+
 				temp->lastSold = time(&settingsStorage.startTime);
-				
+
 				//stroing the purchase information every where (very memory inefficient)
 				purchase *newPurchase = new purchase(time(&settingsStorage.startTime),currentUser,temp,salePrice);
 				temp->price = temp->price*(settingsStorage.postBuyMultiplier);
@@ -193,7 +193,7 @@ void market::printProducts(product *node)
 			temp->price = temp->price * (pow(settingsStorage.decayRateBase,settingsStorage.decayRate * (time(&settingsStorage.startTime) - temp->lastSold)));
 		}
 		temp->lastSold = time(&settingsStorage.startTime);
-		std::cout << "Name: "<< temp->name  << std::endl << "  Price: "<< temp->price << std::endl << "  Quantity: " << temp->quantity << std::endl; 
+		std::cout << "Name: "<< temp->name  << std::endl << "  Price: "<< temp->price << std::endl << "  Quantity: " << temp->quantity << std::endl;
 	}
 	if(temp->right != NULL)
 	{
@@ -254,8 +254,8 @@ product * market::findProduct(std::string name)
 
 void market::timeStats()
 {
-	//printing out some user info 
-	std::cout << "Current time: " << time(&settingsStorage.startTime) <<std::endl;  
+	//printing out some user info
+	std::cout << "Current time: " << time(&settingsStorage.startTime) <<std::endl;
 	std::cout << "Last time check was  " << time(&settingsStorage.startTime) - lastTimeCheck << " seconds ago" <<std::endl;
 	lastTimeCheck = time(&settingsStorage.startTime);
 }
@@ -274,7 +274,7 @@ void market::addNewUser(std::string name, std::string password, double wallet)
 
 void market::printProfit(product * node)
 {
-	//same basic idea as the tree print 
+	//same basic idea as the tree print
 	product *temp = node;
 	if(temp->left != NULL)
 	{
@@ -287,7 +287,7 @@ void market::printProfit(product * node)
 			temp->price = temp->price * (pow(settingsStorage.decayRateBase,settingsStorage.decayRate * (time(&settingsStorage.startTime) - temp->lastSold)));
 		}
 		temp->lastSold = time(&settingsStorage.startTime);
-		std::cout << "Name: "<< temp->name  << std::endl << "Profit: "<< temp->profit << std::endl; 
+		std::cout << "Name: "<< temp->name  << std::endl << "Profit: "<< temp->profit << std::endl;
 	}
 	if(temp->right != NULL)
 	{
@@ -299,8 +299,8 @@ void market::totalProfit()
 	totalProfit(blockChain);
 }
 void market::totalProfit(std::vector<purchaseBlockChain*> blockChain)
-{	
-	//runs though the purchase block chain and adds the net profit 
+{
+	//runs though the purchase block chain and adds the net profit
 	int blockChainSize = blockChain.size();
 	for(int blockChainIndex = 0; blockChainIndex < blockChainSize; blockChainIndex++)
 	{
@@ -323,4 +323,23 @@ void market::addMoney()
 	std::stringstream convertMoney(moneyS);
 	convertMoney >> money;
 	currentUser->wallet = currentUser->wallet + money;
+}
+
+void market::pastPurchases()
+{
+	pastPurchases(blockChain);
+}
+void market::pastPurchases(std::vector<purchaseBlockChain*> blockChain)
+{
+	//runs though the purchase block chain prints all past purchases
+	int blockChainSize = blockChain.size();
+	for(int blockChainIndex = 0; blockChainIndex < blockChainSize; blockChainIndex++)
+	{
+		//stores profit from each  product in its spot in the tree
+		purchase *currentPurchase = blockChain[blockChainIndex]->purchaseEvent;
+		std::cout<<"Coin:"<<currentPurchase->item->name<<std::endl;
+		std::cout<<"  Cost:"<<currentPurchase->cost<<std::endl;
+		std::cout<<"  Name:"<<currentPurchase->buyer->name<<std::endl;
+		std::cout<<"  Time:"<<currentPurchase->time<<std::endl<<std::endl;
+	}
 }
